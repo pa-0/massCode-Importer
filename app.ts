@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import axios from 'axios';
 import {v4 as uuidv4} from 'uuid';
-import * as fs from "fs";
+import * as fs from 'fs';
 import {createLogger, format, transports} from 'winston';
-import _ from "lodash";
+import _ from 'lodash';
 
 const GITHUB_API_BASE_URL = 'https://api.github.com';
 

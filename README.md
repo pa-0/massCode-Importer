@@ -1,6 +1,6 @@
 # massCode Importer
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/pauloeli/massCode-Importer)](https://github.com/pauloeli/massCode-Importer/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/pauloeli/massCode-Importer)](https://github.com/pauloeli/massCode-Importer/pulls)
 
@@ -96,4 +96,4 @@ submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

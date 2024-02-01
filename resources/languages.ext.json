@@ -1,0 +1,134 @@
+[
+  {
+    "extension": "js",
+    "name": "JavaScript"
+  },
+  {
+    "extension": "py",
+    "name": "Python"
+  },
+  {
+    "extension": "java",
+    "name": "Java"
+  },
+  {
+    "extension": "rb",
+    "name": "Ruby"
+  },
+  {
+    "extension": "php",
+    "name": "PHP"
+  },
+  {
+    "extension": "cs",
+    "name": "C#"
+  },
+  {
+    "extension": "cpp",
+    "name": "C++"
+  },
+  {
+    "extension": "c",
+    "name": "C"
+  },
+  {
+    "extension": "ts",
+    "name": "TypeScript"
+  },
+  {
+    "extension": "swift",
+    "name": "Swift"
+  },
+  {
+    "extension": "go",
+    "name": "Go"
+  },
+  {
+    "extension": "rs",
+    "name": "Rust"
+  },
+  {
+    "extension": "kt",
+    "name": "Kotlin"
+  },
+  {
+    "extension": "scala",
+    "name": "Scala"
+  },
+  {
+    "extension": "r",
+    "name": "R"
+  },
+  {
+    "extension": "m",
+    "name": "Objective-C"
+  },
+  {
+    "extension": "dart",
+    "name": "Dart"
+  },
+  {
+    "extension": "lua",
+    "name": "Lua"
+  },
+  {
+    "extension": "pl",
+    "name": "Perl"
+  },
+  {
+    "extension": "hs",
+    "name": "Haskell"
+  },
+  {
+    "extension": "sh",
+    "name": "Shell Scripting"
+  },
+  {
+    "extension": "bat",
+    "name": "Batch Scripting"
+  },
+  {
+    "extension": "ps1",
+    "name": "PowerShell"
+  },
+  {
+    "extension": "sql",
+    "name": "SQL Script"
+  },
+  {
+    "extension": "html",
+    "name": "HTML"
+  },
+  {
+    "extension": "css",
+    "name": "CSS"
+  },
+  {
+    "extension": "xml",
+    "name": "XML"
+  },
+  {
+    "extension": "json",
+    "name": "JSON"
+  },
+  {
+    "extension": "md",
+    "name": "Markdown"
+  },
+  {
+    "extension": "yml",
+    "name": "YAML"
+  },
+  {
+    "extension": "yaml",
+    "name": "YAML"
+  },
+  {
+    "extension": "txt",
+    "name": "Plain Text"
+  },
+  {
+    "extension": "groovy",
+    "name": "Groovy"
+  }
+]

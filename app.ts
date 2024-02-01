@@ -6,8 +6,12 @@ import {createLogger, format, transports} from 'winston';
 import _ from 'lodash';
 
 const GITHUB_API_BASE_URL = 'https://api.github.com';
-
 const githubToken = process.env.GITHUB_TOKEN;
+
+type Language = {
+    extension: string;
+    name: string;
+};
 
 interface ISnippet {
     isDeleted: boolean;
@@ -44,6 +48,8 @@ if (!githubToken) {
     process.exit(1);
 }
 
+const languages: Array<Language> = JSON.parse(fs.readFileSync('resources/languages.ext.json', 'utf-8')) as Array<Language>;
+
 async function* getUserSnippets(username: string): AsyncGenerator<any> {
     let currentPage = 1;
 
@@ -70,24 +76,23 @@ async function* getUserSnippets(username: string): AsyncGenerator<any> {
 
 async function listUserSnippets(username: string) {
     try {
-        for await (const snippets of getUserSnippets(username)) {
-            for (const snippet of snippets) {
-                const posStartTags = snippet.description.indexOf('#');
+        for await (const page of getUserSnippets(username)) {
+            for (const item of page) {
+                const posStartTags = item.description.indexOf('#');
 
                 const model = {
                     id: uuidv4().replace('-', ''),
                     isDeleted: false,
                     isFavorites: false,
-                    folderId: '',
                     content: new Array<any>,
-                    name: snippet.description.substring(0, posStartTags >= 0 ? posStartTags : snippet.description.length).trim(),
-                    tagsIds: snippet?.description.match(/#\w+/g)?.map((tag: string) => getOrCreateTag(tag)) || [],
-                    createdAt: new Date(snippet.created_at).getTime(),
-                    updatedAt: snippet?.updated_at ? new Date(snippet?.updated_at).getTime() : '',
+                    name: item.description.substring(0, posStartTags >= 0 ? posStartTags : item.description.length).trim(),
+                    tagsIds: item?.description.match(/#\w+/g)?.map((tag: string) => getOrCreateTag(tag)) || [],
+                    createdAt: new Date(item.created_at).getTime(),
+                    updatedAt: item?.updated_at ? new Date(item?.updated_at).getTime() : '',
                 } as ISnippet;
 
-                for (const fileName of Object.keys(snippet.files)) {
-                    const file = snippet.files[fileName] as any;
+                for (const fileName of Object.keys(item.files)) {
+                    const file = item.files[fileName] as any;
                     if (!file.raw_url) {
                         continue;
                     }
@@ -101,7 +106,12 @@ async function listUserSnippets(username: string) {
                     })
                 }
 
-                outSnippets.push(model);
+                if (model.content.length) {
+                    const language = getLanguageNameFromFilename(model.content[0].label);
+                    model.folderId = getOrCreateFolder(language);
+                }
+
+                snippets.push(model);
 
                 logger.info(`Snippet "${model.name}" converted with success`);
             }
@@ -111,19 +121,50 @@ async function listUserSnippets(username: string) {
     }
 }
 
-function getOrCreateTag(tag: string): string {
-    const tagName = tag.replace('#', '')?.trim();
+function getLanguageNameFromFilename(name: string): Language {
+    const extension = name.split('.').pop()?.toLowerCase();
+    return languages.find((e: any) => e.extension === extension) || {extension: 'txt', name: 'Plain Text'};
+}
 
-    if (!outTags.some((e: any) => e.name === tagName)) {
-        outTags.push({
-            id: generateRandomString(8),
-            name: tagName,
-            createdAt: new Date().getTime(),
-            updatedAt: new Date().getTime()
-        });
+function getOrCreateTag(name: string): string {
+    const tagName = name.replace('#', '').trim();
+
+    let tagId = tags.find((tag: any) => tag.name === tagName);
+    if (tagId) {
+        return tagId;
     }
 
-    return outTags.find((e: any) => e.name === tagName)?.id;
+    tagId = generateRandomString(8);
+    tags.push({
+        id: tagId,
+        name: tagName,
+        createdAt: new Date().getTime(),
+        updatedAt: new Date().getTime()
+    });
+
+    return tagId;
+}
+
+function getOrCreateFolder(language: Language): string {
+    let folderId = folders.find((e: any) => e.name === language.name)?.id;
+    if (folderId) {
+        return folderId;
+    }
+
+    folderId = generateRandomString(8);
+    folders.push({
+        id: folderId,
+        name: language.name,
+        defaultLanguage: language.extension,
+        parentId: null,
+        isOpen: false,
+        isSystem: false,
+        createdAt: new Date().getTime(),
+        updatedAt: new Date().getTime(),
+        index: folders.length + 1
+    });
+
+    return folderId;
 }
 
 function generateRandomString(length: number): string {
@@ -136,13 +177,20 @@ function generateRandomString(length: number): string {
     return result;
 }
 
-const outTags: Array<any> = new Array<any>();
-const outSnippets: Array<any> = new Array<any>();
+const tags: Array<any> = new Array<any>();
+const folders: Array<any> = new Array<any>();
+const snippets: Array<any> = new Array<any>();
 
 listUserSnippets(process.env.GITHUB_USERNAME as string).then(() => {
-    fs.writeFileSync(`tags.json`, JSON.stringify(outTags), 'utf-8');
-    fs.writeFileSync(`snippets.json`, JSON.stringify(outSnippets), 'utf-8');
+    fs.writeFileSync(`tags.json`, JSON.stringify(tags), 'utf-8');
+    fs.writeFileSync(`folders.json`, JSON.stringify(folders), 'utf-8');
+    fs.writeFileSync(`snippets.json`, JSON.stringify(snippets), 'utf-8');
 
-    logger.info(`${outTags.length} tags has been converted`);
-    logger.info(`${outSnippets.length} snippets has been converted`);
+    fs.writeFileSync(`db.json`, JSON.stringify(
+        {
+            folders: folders,
+            tags: tags,
+            snippets: snippets
+        }, null, 2
+    ), 'utf-8');
 })

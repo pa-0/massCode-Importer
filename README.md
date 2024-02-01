@@ -76,9 +76,7 @@ GitHub username.
 3. Run the importer:
 
 ```shell
-npm start
-# or
-yarn start
+node --require ts-node/register src/app.ts
 ```
 
 The importer will fetch your GitHub Gists, convert them into massCode-compatible format, and create JSON files for

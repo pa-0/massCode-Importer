@@ -1,8 +1,8 @@
 {
   "name": "masscode-importer",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Command-line tool designed to simplify the process of importing code snippets from your GitHub\nGists into [massCode]",
-  "main": "app.ts",
+  "main": "src/app.ts",
   "keywords": [
     "github",
     "code",
@@ -11,7 +11,7 @@
   "scripts": {
     "start": "tsnd src/app.ts"
   },
-  "author": "paulo.eli@betha.com",
+  "author": "paulo.eli@outlook.com",
   "private": true,
   "license": "MIT",
   "dependencies": {

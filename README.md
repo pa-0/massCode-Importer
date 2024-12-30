@@ -71,7 +71,8 @@ GITHUB_USERNAME=your_github_username_here
 ```
 
 Replace `your_github_token_here` with your GitHub personal access token and `your_github_username_here` with your
-GitHub username.
+GitHub username. Fallow this [link](https://github.com/settings/tokens) to create the Classic Token. Select the `gist`
+scope.
 
 3. Run the importer:
 
